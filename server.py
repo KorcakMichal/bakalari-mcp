@@ -26,7 +26,6 @@ def current_time():
     return current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 
-
 # region table
 
 
@@ -89,7 +88,7 @@ def get_homeworks_count_actual():
 
 
 @mcp.tool()
-def get_marks(): #TODO: spatne označuje nové známky
+def get_marks():  # NOTE: sometimes misuderstood by agent
     """Get marks from Bakalari."""
     return client.get_marks()
 
@@ -101,21 +100,22 @@ def get_marks_count_new():
 
 
 @mcp.tool()
-def get_marks_final(): #TODO: počítá známky z obou pololetí do průměru
-    """Get final marks from Bakalari."""
+def get_marks_final():
+    """Get final marks from Bakalari. Be Careful when calculating averages. Be sure if user wants to only half year or whole year marks. Probably only from second."""
     return client.get_marks_final()
 
 
 @mcp.tool()
-def get_marks_measures(): #TODO: otestovat
-    """Get marks measures from Bakalari."""
+def get_marks_measures():
+    """Get marks pedagogical measures from Bakalari."""
     return client.get_marks_measures()
 
 
-@mcp.tool()
-def post_marks_what_if(data): #TODO: implementovat
-    """Post marks what if to Bakalari."""
-    return client.post_marks_what_if(data)
+# not needed agent do it alone and automatically
+# @mcp.tool()
+# def post_marks_what_if(data):
+#    """Post marks what if to Bakalari."""
+#    return client.post_marks_what_if(data)
 
 
 # endregion marks
@@ -154,7 +154,7 @@ def get_subjects():
 
 
 @mcp.tool()
-def get_subjects_themes_id(id): #TODO: otestovat, implementace v AI, stačí test
+def get_subjects_themes_id(id):
     """Get topics of lessons of some subject from Bakalari."""
     return client.get_subjects_themes_id(id)
 
@@ -171,7 +171,7 @@ def get_substitutions():
 
 
 @mcp.tool()
-def get_absence_student(): #TODO: píše to že mám neomluvené absence, místo vyřešených absencích
+def get_absence_student():
     """Get student absences from Bakalari."""
     return client.get_absence_student()
 
@@ -186,25 +186,31 @@ def get_user():
 
 # region komens
 
-#region received messages
+
+# region received messages
 @mcp.tool()
 def get_komens_messages_received():
     """Get komens messages received from Bakalari."""
 
     return client.post_komens_messages_received()
 
+
 @mcp.tool()
 def get_komens_messages_received_id(id):
     """Get komens messages received by ID from Bakalari."""
     return client.get_komens_messages_received_id(id)
 
+
 @mcp.tool()
 def get_komens_messages_received_unread():
     """Get number of unread messages received from Bakalari."""
     return client.get_komens_messages_received_unread()
+
+
 # endregion received messages
 
-#region sent messages
+
+# region sent messages
 @mcp.tool()
 def get_komens_messages_sent_id(id):
     """Get messages sent by ID from Bakalari."""
@@ -212,14 +218,16 @@ def get_komens_messages_sent_id(id):
 
 
 @mcp.tool()
-def get_komens_messages_sent(): #otestovat, musí se poslat zpráva prvně někomu
+def get_komens_messages_sent():  # otestovat, musí se poslat zpráva prvně někomu
     """Get komens messages sent from Bakalari."""
     return client.post_komens_messages_sent()
 
+
 # endregion sent messages
 
-#region post messages
-#TODO: otestovat všechny post nástroje, a připravit data structures
+
+# region post messages
+# TODO: otestovat všechny post nástroje, a připravit data structures
 @mcp.tool()
 def post_komens_message(data):
     """Post komens message to Bakalari."""
@@ -248,9 +256,12 @@ def post_komens_message_types_reply(id):
 def post_komens_messages_apology(id):
     """Post komens messages apology to Bakalari."""
     return client.post_komens_messages_apology(id)
+
+
 # endregion post messages
 
-#region other messeges tools
+
+# region other messeges tools
 @mcp.tool()
 def get_komens_message_types():
     """Get komens message types which can be used in Bakalari."""
@@ -273,6 +284,8 @@ def get_komens_attachment_by_id(id):
 def get_komens_messages_rating():
     """Get komens messages rating from Bakalari."""
     return client.get_komens_messages_rating()
+
+
 # endregion other messeges tools
 
 # endregion komens
