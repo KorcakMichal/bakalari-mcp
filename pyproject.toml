@@ -8,4 +8,6 @@ dependencies = [
     "coloredlogs>=15.0.1",
     "httpx>=0.28.1",
     "mcp[cli]>=1.19.0",
+    "prettytable>=3.16.0",
+    "pytz>=2025.2",
 ]
