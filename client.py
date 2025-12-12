@@ -73,6 +73,7 @@ class Client:
         self.refresh_token = response.json().get("refresh_token")
         self.headers["Authorization"] = f"Bearer {self.access_token}"
 
+#TODO: přijde mi že každý call je provoláván dvakrát
     def handle_login(function):
         """
         Decorator to handle automatic token refresh on 401 errors.
@@ -84,7 +85,7 @@ class Client:
             except httpx.HTTPStatusError as e:
                 if e.response.status_code == 401:
                     logger.info("Access token expired, refreshing...")
-                    self.update_tokens()
+                    self.update_tokens_with_refresh_token()
                     return function(self, *args, **kwargs)
                 else:
                     raise e
@@ -315,7 +316,7 @@ class Client:
         return response.json()
 
     @handle_login
-    def get_komens_messages_received(self) -> dict:
+    def post_komens_messages_received(self) -> dict:
         """
         Fetches received Komens messages.
         Returns:
@@ -323,7 +324,7 @@ class Client:
                 "Messages": [ {...} ]
             }
         """
-        response = httpx.get(
+        response = httpx.post(
             f"{self.base_url}/api/3/komens/messages/received", headers=self.headers
         )
         response.raise_for_status()
@@ -366,7 +367,7 @@ class Client:
     @handle_login
     def get_komens_messages_received_unread(self) -> dict:
         """
-        Fetches unread received Komens messages.
+        Fetches number of unread received Komens messages.
         Returns:
             dict: int (count of unread messages)
         """
@@ -378,7 +379,7 @@ class Client:
         return response.json()
 
     @handle_login
-    def get_komens_messages_sent(self) -> dict:
+    def post_komens_messages_sent(self) -> dict:
         """
         Fetches sent Komens messages.
         Returns:
@@ -386,7 +387,7 @@ class Client:
                 "Messages": [ {...} ]
             }
         """
-        response = httpx.get(
+        response = httpx.post(
             f"{self.base_url}/api/3/komens/messages/sent", headers=self.headers
         )
         response.raise_for_status()

@@ -36,7 +36,7 @@ def get_permanent_timetable():
     return client.get_permanent_timetable()
 
 
-@mcp.tool()  # TODO: AI neví kolik je hodin ve dni a tak neumí správně vrátit rozvrh na aktuální den
+@mcp.tool()
 def get_actual_timetable():
     """Get actual timetable from Bakalari."""
     res = formatter.dict_to_table_actual_timetable(client.get_actual_timetable())
@@ -89,31 +89,31 @@ def get_homeworks_count_actual():
 
 
 @mcp.tool()
-def get_marks():
+def get_marks(): #TODO: spatne označuje nové známky
     """Get marks from Bakalari."""
     return client.get_marks()
 
 
 @mcp.tool()
 def get_marks_count_new():
-    """Get count of new marks from Bakalari."""
+    """Get count of new marks from Bakalari. Needed for new mark notifications."""
     return client.get_marks_count_new()
 
 
 @mcp.tool()
-def get_marks_final():
+def get_marks_final(): #TODO: počítá známky z obou pololetí do průměru
     """Get final marks from Bakalari."""
     return client.get_marks_final()
 
 
 @mcp.tool()
-def get_marks_measures():
+def get_marks_measures(): #TODO: otestovat
     """Get marks measures from Bakalari."""
     return client.get_marks_measures()
 
 
 @mcp.tool()
-def post_marks_what_if(data):
+def post_marks_what_if(data): #TODO: implementovat
     """Post marks what if to Bakalari."""
     return client.post_marks_what_if(data)
 
@@ -122,7 +122,8 @@ def post_marks_what_if(data):
 
 # region payments
 
-
+# vynechání naše škola nepoužívá
+'''
 @mcp.tool()
 def get_payments_classfund():
     """Get class fund payments from Bakalari."""
@@ -139,7 +140,7 @@ def get_payments_classfund_paymentsinfo():
 def get_payments_classfund_summary():
     """Get class fund summary from Bakalari."""
     return client.get_payments_classfund_summary()
-
+'''
 
 # endregion payments
 
@@ -153,8 +154,8 @@ def get_subjects():
 
 
 @mcp.tool()
-def get_subjects_themes_id(id):
-    """Get subjects themes by ID from Bakalari."""
+def get_subjects_themes_id(id): #TODO: otestovat, implementace v AI, stačí test
+    """Get topics of lessons of some subject from Bakalari."""
     return client.get_subjects_themes_id(id)
 
 
@@ -170,7 +171,7 @@ def get_substitutions():
 
 
 @mcp.tool()
-def get_absence_student():
+def get_absence_student(): #TODO: píše to že mám neomluvené absence, místo vyřešených absencích
     """Get student absences from Bakalari."""
     return client.get_absence_student()
 
@@ -185,55 +186,25 @@ def get_user():
 
 # region komens
 
-
-@mcp.tool()
-def get_komens_attachment_by_id(id):
-    """Get komens attachment from Bakalari."""
-    return client.get_komens_attachment_by_id(id)
-
-
-@mcp.tool()
-def get_komens_message_by_id(id):
-    """Get komens message from Bakalari."""
-    return client.get_komens_message_by_id(id)
-
-
-@mcp.tool()
-def get_komens_message_types():
-    """Get komens message types from Bakalari."""
-    return client.get_komens_message_types()
-
-
-@mcp.tool()
-def get_komens_messages_noticeboard():
-    """Get komens messages noticeboard from Bakalari."""
-    return client.get_komens_messages_noticeboard()
-
-
-@mcp.tool()
-def get_komens_messages_noticeboard_unread():
-    """Get unread komens messages noticeboard from Bakalari."""
-    return client.get_komens_messages_noticeboard_unread()
-
-
-@mcp.tool()
-def get_komens_messages_rating():
-    """Get komens messages rating from Bakalari."""
-    return client.get_komens_messages_rating()
-
-
+#region received messages
 @mcp.tool()
 def get_komens_messages_received():
     """Get komens messages received from Bakalari."""
-    return client.get_komens_messages_received()
 
+    return client.post_komens_messages_received()
 
 @mcp.tool()
 def get_komens_messages_received_id(id):
     """Get komens messages received by ID from Bakalari."""
     return client.get_komens_messages_received_id(id)
 
+@mcp.tool()
+def get_komens_messages_received_unread():
+    """Get number of unread messages received from Bakalari."""
+    return client.get_komens_messages_received_unread()
+# endregion received messages
 
+#region sent messages
 @mcp.tool()
 def get_komens_messages_sent_id(id):
     """Get messages sent by ID from Bakalari."""
@@ -241,17 +212,14 @@ def get_komens_messages_sent_id(id):
 
 
 @mcp.tool()
-def get_komens_messages_received_unread():
-    """Get unread messages received from Bakalari."""
-    return client.get_komens_messages_received_unread()
-
-
-@mcp.tool()
-def get_komens_messages_sent():
+def get_komens_messages_sent(): #otestovat, musí se poslat zpráva prvně někomu
     """Get komens messages sent from Bakalari."""
-    return client.get_komens_messages_sent()
+    return client.post_komens_messages_sent()
 
+# endregion sent messages
 
+#region post messages
+#TODO: otestovat všechny post nástroje, a připravit data structures
 @mcp.tool()
 def post_komens_message(data):
     """Post komens message to Bakalari."""
@@ -280,7 +248,32 @@ def post_komens_message_types_reply(id):
 def post_komens_messages_apology(id):
     """Post komens messages apology to Bakalari."""
     return client.post_komens_messages_apology(id)
+# endregion post messages
 
+#region other messeges tools
+@mcp.tool()
+def get_komens_message_types():
+    """Get komens message types which can be used in Bakalari."""
+    return client.get_komens_message_types()
+
+
+@mcp.tool()
+def get_komens_message_by_id(id):
+    """Get komens message from Bakalari."""
+    return client.get_komens_message_by_id(id)
+
+
+@mcp.tool()
+def get_komens_attachment_by_id(id):
+    """Get komens attachment from Bakalari."""
+    return client.get_komens_attachment_by_id(id)
+
+
+@mcp.tool()
+def get_komens_messages_rating():
+    """Get komens messages rating from Bakalari."""
+    return client.get_komens_messages_rating()
+# endregion other messeges tools
 
 # endregion komens
 
