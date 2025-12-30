@@ -1,7 +1,10 @@
 from typing import Any, Callable
 from datetime import date as dt_date
+import filetype
 import httpx
 import logging
+import pyrfc6266
+import base64
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -73,7 +76,6 @@ class Client:
         self.refresh_token = response.json().get("refresh_token")
         self.headers["Authorization"] = f"Bearer {self.access_token}"
 
-#TODO: přijde mi že každý call je provoláván dvakrát
     def handle_login(function):
         """
         Decorator to handle automatic token refresh on 401 errors.
@@ -235,13 +237,17 @@ class Client:
         Args:
             id (str): Attachment ID.
         Returns:
-            dict: See Bakaláři API documentation for details (endpoint not documented in public API).
+            dict: {filename: str, content: base64 encoded str}
         """
         response = httpx.get(
             f"{self.base_url}/api/3/komens/attachment/{id}", headers=self.headers
         )
         response.raise_for_status()
-        return response.json()
+
+        base64_data = base64.b64encode(response.content).decode("utf-8")
+        filename = pyrfc6266.requests_response_to_filename(response)
+        mime_type = filetype.guess(response.content).mime
+        return {"filename": filename, "content": base64_data, "mime_type": mime_type}
 
     @handle_login
     def get_komens_message_by_id(self, id: str) -> dict:

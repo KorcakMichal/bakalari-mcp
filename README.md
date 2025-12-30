@@ -1,0 +1,1 @@
+Debug proveden na Grok Code Fast 1

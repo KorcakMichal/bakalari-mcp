@@ -1,17 +1,14 @@
 from urllib import response
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.resources.types import FileResource
 import os
 from dotenv import load_dotenv
-import logging
 from client import Client
 from datetime import datetime
 import pytz
 import formatter
 
 load_dotenv()
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 mcp = FastMCP("bakalari")
 
@@ -275,12 +272,6 @@ def get_komens_message_by_id(id):
 
 
 @mcp.tool()
-def get_komens_attachment_by_id(id):
-    """Get komens attachment from Bakalari."""
-    return client.get_komens_attachment_by_id(id)
-
-
-@mcp.tool()
 def get_komens_messages_rating():
     """Get komens messages rating from Bakalari."""
     return client.get_komens_messages_rating()
@@ -290,6 +281,18 @@ def get_komens_messages_rating():
 
 # endregion komens
 
+#TODO: attachment resource dodělat
+#@mcp.resource()
+#def get_komens_attachment_by_id(id):
+#    """Get komens attachment from Bakalari."""
+#    attachment = client.get_komens_attachment_by_id(id)
+#    return FileResource(
+#        type="file",
+#        data=attachment["content"],
+#        mimeType="application/pdf",
+#        name=attachment["filename"],
+#    )
+
 
 @mcp.prompt()
 def welcome_message():
@@ -297,4 +300,4 @@ def welcome_message():
 
 
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    mcp.run()
